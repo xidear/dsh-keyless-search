@@ -1,0 +1,32 @@
+# dsh-keyless-search bundle patch.
+#
+# Pins the `web` seam to the keyless chain and mounts it. `fetchProvider` is
+# restated here because a patch replaces the targeted row's whole `config`, and
+# leaving it out would drop the fetch provider.
+#
+# The billed DeepSeek search route is switched off rather than merely deselected:
+# with it disabled, a stray `searchProvider: deepseek-official` fails loudly
+# instead of silently spending balance.
+- id: web
+  config:
+    searchProvider: keyless-search
+    fetchProvider: http
+
+- id: web-search-deepseek
+  disabled: true
+
+- insert:
+    - id: keyless-search
+      name: dsh-keyless-search
+      config:
+        # Parallel answers first: typed results in about two seconds.
+        # Exa supplies highlights, and is the more likely of the two to throttle.
+        order:
+          - parallel
+          - exa
+        timeoutMs: 8000
+        # A throttled free tier does not recover within one query.
+        cooldownMs: 120000
+        maxResults: 8
+        # Small models pay for every character; the endpoints return whole paragraphs.
+        snippetChars: 600
