@@ -2,3 +2,20 @@ node_modules/
 lib/
 *.tgz
 .DS_Store
+
+# 证书与私钥 —— 任何情况下不入库
+.cert/
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+# 凭据/令牌文件
+.env
+.env.local
+*.secret
+*token*.env
+gitea.env
+credentials.yaml
+**/credentials.json
